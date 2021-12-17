@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import random
+
+
 
 #Business Simulation Function
 def business_target_simulation(S, L, M, C, A, T, BT):
@@ -10,14 +13,10 @@ def business_target_simulation(S, L, M, C, A, T, BT):
     else:
         return True
 
-@st.cache(persist=True, allow_output_mutation=True)
-def fetch_and_clean_data(url):
-     # Fetch data from URL here, and then clean it up.
-     return pd.read_csv(url, index_col=0)
-
+p = 0.01
 st.title('Insurance Cross-Selling Business Simulation')
 url = 'https://raw.githubusercontent.com/cornelliusyudhawijaya/Cross-Sell-Insurance-Business-Simulation/main/train.csv'
-train = fetch_and_clean_data(url)
+train = pd.read_csv(url, index_col=0, skiprows=lambda i: i>0 and random.random() > p)
 
 
 # Change to Categorical data
