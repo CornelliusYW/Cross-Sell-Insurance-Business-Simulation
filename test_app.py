@@ -61,22 +61,22 @@ M = Model Metrics, C = Cost per Call, A = Number of Agent, T = Timeline"""
 
 one_col, two_col, three_col, four_col = st.columns(4)
 with one_col:
-    BT = st.number_input('Business Target', value=0)
+    BT = st.number_input('Business Target')
 with two_col:
-    S = st.number_input('Success Income', value = 0)
+    S = st.number_input('Success Income')
 with three_col:
-    L = st.number_input('Number of Leads', value = 0)
+    L = st.number_input('Number of Leads')
 with four_col:
-    M = st.number_input('Model Metrics', value =0)
+    M = st.number_input('Model Metrics')
 
 five_col, six_col, seven_col = st.columns(3)
 
 with five_col:
-    C = st.number_input('Cost per Call', value =0)
+    C = st.number_input('Cost per Call')
 with six_col:
-    A= st.number_input('Number of Agents', value =0)
+    A= st.number_input('Number of Agents')
 with seven_col:
-    T = st.number_input('Timeline', value = 0)
+    T = st.number_input('Timeline')
 
 if st.button('Simulate the Business Requirements'):
     if business_target_simulation(S=S, L=L, M=M/100, C=C, A=A, T=T, BT=BT):
