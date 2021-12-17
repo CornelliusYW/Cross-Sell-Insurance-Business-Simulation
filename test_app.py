@@ -28,7 +28,7 @@ train['Previously_Insured'] = train['Previously_Insured'].astype('string')
 st.subheader('100 Sample Data')
 st.dataframe(train.sample(100))
 
-st.subheader('Data Visualization with respect to Response (1% Samples')
+st.subheader('Data Visualization with respect to Response (1% Samples)')
 
 left_column, right_column = st.columns(2)
 with left_column:
