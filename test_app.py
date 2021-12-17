@@ -9,9 +9,9 @@ import random
 def business_target_simulation(S, L, M, C, A, T, BT):
     revenue = (S*(L * M)) - (L * (C * (A/T)))
     if revenue < BT:
-        return False
-    else:
         return True
+    else:
+        return False
 
 p = 0.01
 st.title('Insurance Cross-Selling Business Simulation')
@@ -79,7 +79,7 @@ with seven_col:
     T = st.number_input('Timeline', value = 0)
 
 if st.button('Simulate the Business Requirements'):
-    if business_target_simulation(S=S, L=L, M=M/100, C=C, A=A, T=T, BT=BT ):
+    if business_target_simulation(S=S, L=L, M=M/100, C=C, A=A, T=T, BT=BT):
         st.header("Business Target are met")
     else:
         st.header("Business Target are not Met")
