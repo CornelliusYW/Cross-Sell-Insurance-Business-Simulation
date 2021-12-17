@@ -8,7 +8,7 @@ import random
 #Business Simulation Function
 def business_target_simulation(S, L, M, C, A, T, BT):
     revenue = (S*(L * M)) - (L * (C * (A/T)))
-    if revenue < BT:
+    if revenue > BT:
         return True
     else:
         return False
@@ -28,7 +28,7 @@ train['Previously_Insured'] = train['Previously_Insured'].astype('string')
 st.subheader('100 Sample Data')
 st.dataframe(train.sample(100))
 
-st.subheader('Data Visualization with respect to Response')
+st.subheader('Data Visualization with respect to Response (1% Samples')
 
 left_column, right_column = st.columns(2)
 with left_column:
@@ -79,7 +79,7 @@ with seven_col:
     T = st.number_input('Timeline')
 
 if st.button('Simulate the Business Requirements'):
-    if business_target_simulation(S=S, L=L, M=M/100, C=C, A=A, T=T, BT=BT):
+    if business_target_simulation(S=S, L=L, M=M/100, C=C, A=A, T=T, BT=BT) == True:
         st.header("Business Target are met")
     else:
         st.header("Business Target are not Met")
