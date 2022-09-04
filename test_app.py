@@ -26,6 +26,7 @@ def correlation_ratio(categories, measurements):
         eta = np.sqrt(numerator/denominator)
     return eta
 
+
 def cramers_v(x, y):
     confusion_matrix = pd.crosstab(x,y)
     chi2 = ss.chi2_contingency(confusion_matrix)[0]
@@ -53,14 +54,14 @@ def business_target_simulation(S, L, M, C, A, T, BT):
 def simulation_plot(metric_range, S, L, C, A, T, BT):
     result = []
     for score in metric_range:
-        result.append(business_target_simulation(S=S, L=L, M = score, C=C, A=A, T=T))
-    plt.figure(figsize = (8,8))
-    img = plt.plot(metric_range, result, marker = 'o')
-    plt.axhline(BT, color  = 'red')
-    return img
+        result.append(business_target_simulation(S=S, L=L, M = score, C=C, A=A, T=T, BT=BT))
 
-p = 0.01
-st.title('Insurance Cross-Selling Business Simulation')
+    img = plt.plot(metric_range, result, marker = 'o')
+    st.pyplot(img)
+
+
+
+st.title('Insurance Cross-Selling Business Simulation and Model Prediction')
 
 """
 Our client is an Insurance company that has provided Health Insurance to its customers now they need your help in building a model to predict whether the policyholders (customers) 
@@ -80,8 +81,8 @@ Let's start with take a look at the dataset and data visualization.
 """
 
 
-url = 'https://raw.githubusercontent.com/cornelliusyudhawijaya/Cross-Sell-Insurance-Business-Simulation/main/train.csv'
-train = pd.read_csv(url, index_col=0, skiprows=lambda i: i>0 and random.random() > p)
+# url = 'https://raw.githubusercontent.com/cornelliusyudhawijaya/Cross-Sell-Insurance-Business-Simulation/main/train.csv'
+train = pd.read_csv('sample.csv')
 train = train.reset_index(drop = True)
 
 # Change to Categorical data
@@ -204,5 +205,58 @@ if st.button('Simulate the Business Requirements'):
 
 st.subheader('Plotting Business Simulation Experiment')
 """
+Let's define some of the variable, we have:
+
+1. Business Target; Let's say this year we want to achieve 10.000.000 Indian Rupee from Cross-Selling program
+2. Timeline would be a year, which means 12 Months
+3. Cost per call let's say 5000 Indian Rupee
+4. Agent number let's say 100
+5. Number of Leads would related to the existing population because it is Cross-Selling program. The test data contain 127037 people. From the train data, we see around 12% population are interested for sales. If we take 12% of the rest data as leads (assumed the prediction model might follow the same probability distribution) then we have 15244 customer as leads.
+
+For model metric, let's assume we use Precision because we need to calculate the True Positive cases from the predicted interest to buy. Because the business process would only call the leads predicted interested, then we need to maximize the precision of class 1 (interested). Why? because if the False Positive too high (low precision) means there are too many call make without successull income; sans, more cost. Our cost are associated with the Positive cases (Either True or False). We want to define our technical KPI as well, so let's simulate various Precision number.
+"""
+
+st.image('simulation_plot.png')
+
+st.subheader('Simulation Result')
+"""
+
+Our business target is 10.000.000 Indian Rupee and it seems according to our simulation we need to achieve at the very least 82% in Precision for our model to have an impact on the business. The number is quite high, but certainly possible. With this in mind, when we set up our model and MLOps, we need to make sure that the precision is always higher than 82%. You could always change the metric to another such as Accuracy, Recall, etc. however we need to tweak the equation as well if we did that.
+Of course, this simulation is based on the linear assumption and hasn't considered the randomness factor and error. We could try to play around with the confidence interval, but let's keep that for a later discussion.
+You could play around with the code and the variable to have a better feeling at simulating the business requirements. I suggest you tweak around the linear function as well because I know it isn't perfect. I am open to suggestions for this function.
+What I want to show is the power of simulation capable to set up the technical requirements for the business. With 82% Precision, we could achieve the business target, less than that is not desirable.
+"""
+
+st.subheader('Machine Learning Development')
 
 """
+From our simulation, we need to achieve 82% Precision in order to have a model that would meet the business target. We would experimenting with various methods and model available to reach the target. 
+Let's start with data preprocessing and preparation.
+
+In this training development, I would use the following features:
+'Gender',
+'Age', 
+'Previously_Insured', 
+'Vehicle_Age', 
+'Vehicle_Damage', 
+'High_ANP', 
+
+With the target 'Response'
+
+For categorical encoding strategy, I would use the One-Hot Encoding as it is the simplest one and the amount of transformed features would not lead to curse of dimensionality.
+
+Lastly, I would split the dataset to train-test dataset with 8:2 ratio.
+"""
+
+st.subheader('Machine Learning Benchmarking')
+
+"""
+What is Machine Learning Benchmarking? It is a process to create a machine learning model as a standard.
+ The benchmark model usually a naive predictor and not learning from any pattern; such as, predicting randomly or predicting same label all the time. I have mention previsouly, do we even need machine learning model for our cases? If the benchmark already did great, then we might not need machine learning model at all.
+"""
+
+bn_result  = pd.DataFrame([['Constant Model', 0.123],
+             ['Uniform Model', 0.124],
+             ['Stratified Strategy', 0.125],
+             ['Prior Strategy', 0]], columns  = ['Benchmark Strategy', 'Precision'])
+st.dataframe(bn_result)
