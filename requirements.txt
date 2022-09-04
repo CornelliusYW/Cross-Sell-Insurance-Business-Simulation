@@ -1,7 +1,6 @@
 streamlit
 pandas
 plotly
-random
 seaborn
 matplotlib
 numpy
